@@ -1,6 +1,6 @@
 module ColabMPNN
 
-export mpnn_sample
+export mpnn_model, mpnn_sample
 
 using PyCall, Conda
 
@@ -8,9 +8,6 @@ const colabdesign = PyNULL()
 const mpnn_model = PyNULL()
 
 function __init__()
-    ENV["PYTHON"] = ""
-    Pkg.build("PyCall")
-
     Conda.pip_interop(true)
     Conda.pip("install", "git+https://github.com/sokrypton/ColabDesign.git@v1.1.1")
 
