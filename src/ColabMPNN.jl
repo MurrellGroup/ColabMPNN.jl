@@ -2,15 +2,12 @@ module ColabMPNN
 
 export mpnn_sample
 
-import Pkg
 using PyCall, Conda
 
 const colabdesign = PyNULL()
 const mpnn_model = PyNULL()
 
 function __init__()
-    import Pkg
-
     ENV["PYTHON"] = ""
     Pkg.build("PyCall")
 
