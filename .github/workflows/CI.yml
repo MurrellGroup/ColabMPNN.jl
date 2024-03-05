@@ -25,20 +25,18 @@ jobs:
           - x64
     steps:
       - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install git+https://github.com/username/repository.git
       - uses: julia-actions/setup-julia@v1
         with:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
       - uses: julia-actions/cache@v1
-
-      # Custom step to build PyCall
-      - name: Build PyCall
-        run: julia --project=@. -e 'using Pkg; Pkg.build("PyCall")'
-
-      # If you need to install Conda and/or other packages, add them here
-      - name: Install Conda and Python dependencies
-        run: |
-          julia --project=@. -e 'using Pkg; Pkg.add("Conda"); using Conda; Conda.pip_interop(true); Conda.pip("install", "git+https://github.com/sokrypton/ColabDesign.git@v1.1.1")'
-
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-runtest@v1
