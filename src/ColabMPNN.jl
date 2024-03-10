@@ -17,7 +17,7 @@ function __init__()
         Conda.pip("install", "git+https://github.com/sokrypton/ColabDesign.git@v1.1.1")
     end
 
-    copy!(colabdesign, pyimport("colabdesign"))
+    copy!(colabdesign, pyimport_conda("colabdesign", "colabdesign"))
     copy!(mpnn_model, colabdesign.mk_mpnn_model())
 end
 
