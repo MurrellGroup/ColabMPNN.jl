@@ -15,6 +15,7 @@ function __init__()
     if !haskey(Conda._installed_packages_dict(), "colabdesign")
         Conda.pip_interop(true)
         Conda.pip("install", "git+https://github.com/sokrypton/ColabDesign.git@v1.1.1")
+        Conda.add("colabdesign")
     end
 
     copy!(colabdesign, pyimport_conda("colabdesign", "colabdesign"))
