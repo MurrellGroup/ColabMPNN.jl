@@ -1,12 +1,11 @@
 module ColabMPNN
 
-export mpnn_sample
+export mpnn, mk_mpnn_model, prep_inputs, sample, sample_parallel, score, get_unconditional_logits
 
 import Pkg
-using PyCall, Conda
+using Conda, PyCall
 
-const colabdesign = PyNULL()
-const mpnn_model = PyNULL()
+const mpnn = PyNULL()
 
 function __init__()
     ENV["PYTHON"] = ""
@@ -18,14 +17,19 @@ function __init__()
         Conda.add("colabdesign")
     end
 
-    copy!(colabdesign, pyimport_conda("colabdesign", "colabdesign"))
-    copy!(mpnn_model, colabdesign.mk_mpnn_model())
+    copy!(mpnn, pyimport_conda("colabdesign.mpnn", "colabdesign"))
 end
 
-function mpnn_sample(path::String, temp::Float64, chain="A")
-    mpnn_model.prep_inputs(pdb_filename=path, chain=chain)
-    samples = mpnn_model.sample_parallel(temperature=temp)
-    return String.(collect(samples["seq"]))
-end
+mk_mpnn_model(; kwargs...) = mpnn.mk_mpnn_model(; kwargs...)
+
+prep_inputs(mpnn_model; kwargs...) = mpnn_model.prep_inputs(; kwargs...)
+
+sample(mpnn_model; kwargs...) = mpnn_model.sample(; kwargs...)
+
+sample_parallel(mpnn_model; kwargs...) = mpnn_model.sample_parallel(; kwargs...)
+
+score(mpnn_model; kwargs...) = mpnn_model.score(; kwargs...)
+
+get_unconditional_logits(mpnn_model) = mpnn_model.get_unconditional_logits()
 
 end
