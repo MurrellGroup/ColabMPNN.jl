@@ -1,6 +1,8 @@
 module ColabMPNN
 
-export mpnn, mk_mpnn_model, prep_inputs, sample, sample_parallel, score, get_unconditional_logits
+export mpnn
+export Samples, Score
+export mk_mpnn_model, prep_inputs, sample, sample_parallel, score, get_unconditional_logits
 
 import Pkg
 using Conda, PyCall
@@ -20,15 +22,41 @@ function __init__()
     copy!(mpnn, pyimport_conda("colabdesign.mpnn", "colabdesign"))
 end
 
-mk_mpnn_model(; kwargs...) = mpnn.mk_mpnn_model(; kwargs...)
+struct Samples
+    seq::Vector{String}
+    seqid::Vector{Float64}
+    score::Vector{Float64}
+    logits::Array{Float32, 3}
+    decoding_order::Array{Int32, 3}
+    S::Array{Float32, 3}
 
-prep_inputs(mpnn_model; kwargs...) = mpnn_model.prep_inputs(; kwargs...)
+    function Samples(samples::Dict{Any, Any})
+        new([samples[string(f)] for f in fieldnames(Samples)]...)
+    end
+end
 
-sample(mpnn_model; kwargs...) = mpnn_model.sample(; kwargs...)
+struct Score
+    seqid::Float64
+    score::Float64
+    logits::Array{Float32, 2}
+    decoding_order::Array{Int32, 1}
+    S::Array{Float32, 2}
 
-sample_parallel(mpnn_model; kwargs...) = mpnn_model.sample_parallel(; kwargs...)
+    function Score(scores::Dict{Any, Any})
+        new([scores[string(f)] for f in fieldnames(Score)]...)
+    end
+end
 
-score(mpnn_model; kwargs...) = mpnn_model.score(; kwargs...)
+
+mk_mpnn_model(args...; kwargs...) = mpnn.mk_mpnn_model(args...; kwargs...)
+
+prep_inputs(mpnn_model, args...; kwargs...) = mpnn_model.prep_inputs(args...; kwargs...)
+
+sample(mpnn_model, args...; kwargs...) = Samples(mpnn_model.sample(args...; kwargs...))
+
+sample_parallel(mpnn_model, args...; kwargs...) = Samples(mpnn_model.sample_parallel(args...; kwargs...))
+
+score(mpnn_model, args...; kwargs...) = Score(mpnn_model.score(args...; kwargs...))
 
 get_unconditional_logits(mpnn_model) = mpnn_model.get_unconditional_logits()
 
