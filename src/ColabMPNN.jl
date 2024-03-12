@@ -47,17 +47,63 @@ struct Score
     end
 end
 
+# Due to how function arguments differ between Python and Julia, the arguments can be specified as either positional or keyword arguments.
 
+"""
+    mk_mpnn_model(
+        model_name="v_48_020",
+        backbone_noise=0.0,
+        dropout=0.0,
+        seed=nothing,
+        verbose=false,
+        weights="original",
+    )
+"""
 mk_mpnn_model(args...; kwargs...) = mpnn.mk_mpnn_model(args...; kwargs...)
 
+"""
+    prep_inputs(mpnn_model,
+        pdb_filename=nothing,
+        chain=nothing,
+        homooligomer=false,
+        ignore_missing=true,
+        fix_pos=nothing,
+        inverse=false,
+        rm_aa=nothing,
+        verbose=false,
+    )
+"""
 prep_inputs(mpnn_model, args...; kwargs...) = mpnn_model.prep_inputs(args...; kwargs...)
 
+"""
+    sample(mpnn_model,
+        num=1,
+        batch=1,
+        temperature=0.1,
+        rescore=false,
+    )
+"""
 sample(mpnn_model, args...; kwargs...) = Samples(mpnn_model.sample(args...; kwargs...))
 
+"""
+    sample_parallel(mpnn_model,
+        batch=10,
+        temperature=0.1,
+        rescore=false,
+    )
+"""
 sample_parallel(mpnn_model, args...; kwargs...) = Samples(mpnn_model.sample_parallel(args...; kwargs...))
 
+"""
+    score(mpnn_model,
+        seq=nothing,
+    )
+"""
 score(mpnn_model, args...; kwargs...) = Score(mpnn_model.score(args...; kwargs...))
 
+"""
+    get_unconditional_logits(mpnn_model)
+"""
 get_unconditional_logits(mpnn_model) = mpnn_model.get_unconditional_logits()
 
 end
