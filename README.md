@@ -40,3 +40,6 @@ Sampling returns a `Samples` instance with the following fields:
 - `logits::Array{Float32, 3}`
 - `decoding_order::Array{Int32, 3}`
 - `S::Array{Float32, 3}`
+
+## Acknowledgements
+This is a thin Julia wrapper of a [JAX port](https://github.com/sokrypton/ColabDesign/tree/main/mpnn) (by [Sergey Ovchinnikov](https://github.com/sokrypton) and others) of [ProteinMPNN](https://github.com/dauparas/ProteinMPNN) (by [Justas Dauparas](https://github.com/dauparas) and others).
