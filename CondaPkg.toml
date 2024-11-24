@@ -1,0 +1,3 @@
+
+[pip.deps]
+colabdesign = "@ https://github.com/sokrypton/ColabDesign/archive/refs/tags/v1.1.2.tar.gz"

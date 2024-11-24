@@ -1,14 +1,15 @@
 name = "ColabMPNN"
 uuid = "434c8270-3839-45f3-8f5c-492a580b2514"
-authors = ["anton083 <anton.oresten42@gmail.com> and contributors"]
-version = "0.0.1"
+authors = ["Anton Oresten <anton.oresten42@gmail.com> and contributors"]
+version = "0.0.2"
 
 [deps]
-Conda = "8f4d0f93-b110-5947-807f-2305c1781a2d"
-Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
-PyCall = "438e738f-606a-5dbb-bf0a-cddfbfd45ab0"
+CondaPkg = "992eb4ea-22a4-4c89-a5bb-47a3300528ab"
+PythonCall = "6099a3de-0909-46bc-b1f4-468b9a2dfc0d"
 
 [compat]
+CondaPkg = "0.2.24"
+PythonCall = "0.9.23"
 julia = "1"
 
 [extras]

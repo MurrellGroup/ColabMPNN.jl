@@ -4,23 +4,11 @@ export mpnn
 export Samples, Score
 export mk_mpnn_model, prep_inputs, sample, sample_parallel, score, get_unconditional_logits
 
-import Pkg
-using Conda, PyCall
+using PythonCall
 
-const mpnn = PyNULL()
+const mpnn = PythonCall.pynew()
 
-function __init__()
-    ENV["PYTHON"] = ""
-    Pkg.build("PyCall")
-
-    if !haskey(Conda._installed_packages_dict(), "colabdesign")
-        Conda.pip_interop(true)
-        Conda.pip("install", "git+https://github.com/sokrypton/ColabDesign.git@v1.1.1")
-        Conda.add("colabdesign")
-    end
-
-    copy!(mpnn, pyimport_conda("colabdesign.mpnn", "colabdesign"))
-end
+__init__() = PythonCall.pycopy!(mpnn, pyimport("colabdesign.mpnn"))
 
 struct Samples
     seq::Vector{String}
@@ -30,8 +18,8 @@ struct Samples
     decoding_order::Array{Int32, 3}
     S::Array{Float32, 3}
 
-    function Samples(samples::Dict{Any, Any})
-        new([samples[string(f)] for f in fieldnames(Samples)]...)
+    function Samples(samples::PyDict)
+        new([pyconvert(Any, samples[Py(string(f))]) for f in fieldnames(Samples)]...)
     end
 end
 
@@ -42,8 +30,8 @@ struct Score
     decoding_order::Array{Int32, 1}
     S::Array{Float32, 2}
 
-    function Score(scores::Dict{Any, Any})
-        new([scores[string(f)] for f in fieldnames(Score)]...)
+    function Score(scores::PyDict)
+        new([pyconvert(Any, scores[pystr(string(f))]) for f in fieldnames(Score)]...)
     end
 end
 
@@ -83,7 +71,7 @@ prep_inputs(mpnn_model, args...; kwargs...) = mpnn_model.prep_inputs(args...; kw
         rescore=false,
     )
 """
-sample(mpnn_model, args...; kwargs...) = Samples(mpnn_model.sample(args...; kwargs...))
+sample(mpnn_model, args...; kwargs...) = Samples(PyDict(mpnn_model.sample(args...; kwargs...)))
 
 """
     sample_parallel(mpnn_model,
@@ -92,18 +80,18 @@ sample(mpnn_model, args...; kwargs...) = Samples(mpnn_model.sample(args...; kwar
         rescore=false,
     )
 """
-sample_parallel(mpnn_model, args...; kwargs...) = Samples(mpnn_model.sample_parallel(args...; kwargs...))
+sample_parallel(mpnn_model, args...; kwargs...) = Samples(PyDict(mpnn_model.sample_parallel(args...; kwargs...)))
 
 """
     score(mpnn_model,
         seq=nothing,
     )
 """
-score(mpnn_model, args...; kwargs...) = Score(mpnn_model.score(args...; kwargs...))
+score(mpnn_model, args...; kwargs...) = Score(PyDict(mpnn_model.score(args...; kwargs...)))
 
 """
     get_unconditional_logits(mpnn_model)
 """
-get_unconditional_logits(mpnn_model) = mpnn_model.get_unconditional_logits()
+get_unconditional_logits(mpnn_model) = pyconvert(Array, mpnn_model.get_unconditional_logits())
 
 end
