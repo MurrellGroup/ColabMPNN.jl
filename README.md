@@ -18,7 +18,7 @@ Add ColabMPNN to your Julia environment in the REPL:
 Create a model using the `mk_mpnn_model` function.
 
 ```julia
-mpnn_model = mk_mpnn_model()
+mpnn_model = mk_mpnn_model() #or mk_mpnn_model(weights="soluble")
 ```
 
 In order to sample, chains from a PDB file must first be prepared.
