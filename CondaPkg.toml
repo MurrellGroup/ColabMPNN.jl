@@ -1,5 +1,6 @@
 [deps]
 python = ">=3.10,<3.14"
+pip = ""
 
 [pip.deps]
 colabdesign = { git = "https://github.com/sokrypton/ColabDesign.git", rev = "v1.1.3" }
