@@ -50,7 +50,7 @@ end
 mk_mpnn_model(args...; kwargs...) = mpnn.mk_mpnn_model(args...; kwargs...)
 
 """
-    prep_inputs(mpnn_model,
+    prep_inputs!(mpnn_model,
         pdb_filename=nothing,
         chain=nothing,
         homooligomer=false,
@@ -61,7 +61,7 @@ mk_mpnn_model(args...; kwargs...) = mpnn.mk_mpnn_model(args...; kwargs...)
         verbose=false,
     )
 """
-prep_inputs(mpnn_model, args...; kwargs...) = mpnn_model.prep_inputs(args...; kwargs...)
+prep_inputs!(mpnn_model, args...; kwargs...) = mpnn_model.prep_inputs(args...; kwargs...)
 
 """
     sample(mpnn_model,
